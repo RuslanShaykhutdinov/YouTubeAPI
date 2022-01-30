@@ -37,7 +37,6 @@ def get_videos(df):
                 upload_date = video['snippet']['publishedAt']
                 upload_date = str(upload_date).split("T")[0]
                 view_count, like_count = get_video_details(video_id)
-
                 df2 = pd.DataFrame([[video_id, video_title, upload_date, view_count, like_count]],
                                    columns=['video_id', 'video_title', 'upload_date',
                                             'view_count', 'like_count'])
