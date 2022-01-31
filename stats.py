@@ -1,30 +1,35 @@
+import numpy
 import pandas as pd
+import pylab
 import seaborn as sns
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
 
 mpl.rcParams.update(mpl.rcParamsDefault)
 
-
-def load_dataset(file_name):
-    df1 = pd.read_csv(file_name)
-    return df1
-
-
-df = load_dataset('youtube_vids.csv')
+df = pd.read_csv('youtube_vids.csv')
 print(df.info())
 print(df.isnull().sum())
-plt.title('5 Random Videos with Likes')
-sns.set_style('darkgrid')
+
 sns.countplot(x='like_count', data=df.sample(5), palette='colorblind')
+sns.set_style('darkgrid')
+plt.title('5 Random Videos with Likes')
 plt.xlabel('Count')
 plt.ylabel('video_title')
 plt.show()
 
+sns.scatterplot(x='view_count', y='like_count', data=df, edgecolor='black', palette='cubehelix')
 sns.set_style('darkgrid')
 plt.title('Dependence between likes and views', size=16)
 plt.xlabel('Views', size=12)
 plt.ylabel('Likes', size=12)
-sns.scatterplot(x='view_count', y='like_count', data=df, edgecolor='black', palette='cubehelix')
 plt.show()
 
+z = numpy.polyfit(df['view_count'], df['like_count'], 1)
+p = numpy.poly1d(z)
+pylab.plot(df['view_count'], p(df['view_count']), "r--")
+plt.show()
+
+corr, _ = pearsonr(df['view_count'], df['like_count'])
+print('Pearsons correlation: %.3f' % corr)
